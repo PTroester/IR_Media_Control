@@ -5,6 +5,7 @@
 
 #define IR_SENSOR 10
 
+//IR-Codes der Fernbedienung
 #define IR_VOL_UP 0xFFA857
 #define IR_VOL_DOWN 0xFFE01F
 #define IR_REV 0xFF22DD
@@ -23,7 +24,7 @@ void setup()
   Serial.println("Booting...");
   Serial.end();
   delay(5000);
-  //Initialisieren der pins, des servos, des IR empfängers, der seriellen Schnittstelle
+  //Initialisieren des IR empfängers und ausgeben als USB-Tastatur
   pinMode(IR_SENSOR, INPUT);
   irrecv.enableIRIn();//IR Sensor starten
   Consumer.begin();
@@ -31,9 +32,9 @@ void setup()
 }
 
 void loop() {
-  if(irrecv.decode(&results))//recieved signal?
+  if(irrecv.decode(&results))//signal erhalten?
   {
-    if(results.value != IR_HOLD)
+    if(results.value != IR_HOLD)//gedrückt gehalten?
     {
       ir_new = results.value;
     }
