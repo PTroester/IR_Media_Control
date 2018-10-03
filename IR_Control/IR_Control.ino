@@ -7,7 +7,7 @@
 
 #define IR_SENSOR 10
 
-//IR-Codes der Fernbedienung
+//IR-Codes from Remote
 #define IR_VOL_UP 0xFFA857
 #define IR_VOL_DOWN 0xFFE01F
 #define IR_REV 0xFF22DD
@@ -19,8 +19,8 @@
 #define IR_START_PRES 0xFF629D //F5
 #define IR_HOLD 0xFFFFFFFF
 
-IRrecv irrecv(IR_SENSOR);//erstelle IR-Empfänger
-decode_results results;//erstelle Objekt für Empfangene IR Signale
+IRrecv irrecv(IR_SENSOR);//create IR receiver
+decode_results results;//storage for results
 
 unsigned long ir_new;
 
@@ -30,9 +30,9 @@ void setup()
   Serial.println("Booting...");
   Serial.end();
   delay(5000);
-  //Initialisieren des IR empfängers und ausgeben als USB-Tastatur
+  //Initialize receiver, let Controller act as Keyboard
   pinMode(IR_SENSOR, INPUT);
-  irrecv.enableIRIn();//IR Sensor starten
+  irrecv.enableIRIn();//Start sensor
 #ifndef READ_VALUES
   Consumer.begin();
   BootKeyboard.begin();
@@ -42,13 +42,13 @@ void setup()
 void loop() {
   if(irrecv.decode(&results))//recieved signal?
   {
-    if(results.value != IR_HOLD)//gedrückt gehalten?
+    if(results.value != IR_HOLD)//button is held?
     {
       ir_new = results.value;
     }
     irrecv.resume();
 #ifdef READ_VALUES
-    Serial.println(results.value, HEX);
+    Serial.println(results.value, HEX); //print values for reading in buttons
 #else
     switch(ir_new)
     {
@@ -120,6 +120,3 @@ void loop() {
   delay(100);
 }
 
-
-void loop() {
-  if(irrecv.decode(&results))//signal erhalten?
